@@ -1,1 +1,1 @@
-### Face recognition app
+### Face Recognition App - Front End
