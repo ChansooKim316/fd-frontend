@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'tachyons'
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,3 +18,7 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+
+// ReactDOM.render(<Modal/>, document.getElementById('root'));
+// serviceWorker.unregister();
+

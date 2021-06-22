@@ -2,6 +2,7 @@ import React from 'react';
 //// 9.16 modefied : import pop-up box
 import {PopupboxManager, PopupboxContainer} from 'react-popupbox';
 import "react-popupbox/dist/react-popupbox.css"
+import "./Register.css"
 
 
 class Register extends React.Component {
@@ -31,7 +32,7 @@ class Register extends React.Component {
 
 	onSubmitSignIn = () => {
 		
-		fetch('https://localhost:80/register', {
+		fetch('http://localhost:80/register', {
 			method: 'post', // default is 'get' request.
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
@@ -107,7 +108,7 @@ class Register extends React.Component {
 				      <div className="mt3">
 				        <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
 				        <input 
-				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black" 
 				        	type="text" 
 				        	name="name"  
 				        	id="name" 
@@ -117,7 +118,7 @@ class Register extends React.Component {
 				      <div className="mt3">
 				        <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 				        <input 
-				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+				        	className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black" 
 				        	type="email" 
 				        	name="email-address"  
 				        	id="email-address" 
@@ -127,7 +128,7 @@ class Register extends React.Component {
 				      <div className="mv3">
 				        <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
 				        <input 
-				        	className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
+				        	className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black" 
 				        	type="password" 
 				        	name="password"  
 				        	id="password" 

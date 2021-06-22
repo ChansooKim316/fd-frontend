@@ -7,6 +7,8 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition'; // '
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import Modal from './components/Modal/Modal';
+import Profile from './components/Profile/Profile';
 import './App.css';
 
 
@@ -71,12 +73,15 @@ const initialState = {
   boxes: [],  // box goes to <FaceRecognition /> component
   route: 'signin',
   isSignedIn: false,
+  isProfileOpen: false,
   user: {
     id: '',
     name: '',
     email: '',
     entries: 0, // how many times he signed in
-    joined: '' // create a date when this part gets executed.
+    joined: '', // create a date when this part gets executed.
+    pet: '',
+    age: ''
   }
 }
 
@@ -130,7 +135,7 @@ class App extends React.Component{
   onButtonSubmit = () => {
     // need to do < npm install clarifai > first
     this.setState({imageUrl: this.state.input}); // it passes 'imageUrl' to <FaceRecognition /> tag
-      fetch('https://localhost:80/imageurl', {
+      fetch('http://localhost:80/imageurl', {
         method: 'post', // default is 'get' request.
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -140,7 +145,7 @@ class App extends React.Component{
       .then(response => response.json()) // because this is a fetch, we have to do response.json()
       .then(response => {
         if (response) {
-          fetch('https://localhost:80/image', {
+          fetch('http://localhost:80/image', {
             method: 'put', // default is 'get' request.
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -160,12 +165,20 @@ class App extends React.Component{
   // 'onRouteChange' changes states(line51) : isSignedIn, route
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState(initialState)
+      return this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})      
     }
-    this.setState({route: route}); // [[ "set"State !!! not state ]
-  }                              // have to wrap it with {}. cause it's an object.
+    this.setState({route: route}); 
+  }
+
+  toggleModal = () => {
+    // returning all state with the changed state
+    this.setState(prevState => ({
+      ...prevState,
+      isProfileOpen: !prevState.isProfileOpen
+    }))
+  }
 
   enterKeyListener = () => {
     // listening enter key on url input
@@ -178,7 +191,7 @@ class App extends React.Component{
 
 
   render() {
-    const { isSignedIn, imageUrl, route, boxes } = this.state; // destructuring. write this line, and delete 'this.state'
+    const { isSignedIn, imageUrl, route, boxes, isProfileOpen, user } = this.state; // destructuring. write this line, and delete 'this.state'
     return (
       <div className="App">
         <Particles className='particles'
@@ -186,10 +199,23 @@ class App extends React.Component{
         />
         {/* components : Navigation, Logo, Rank, ImageLinkForm, FaceRecognition, SiginIn, Register 
                     ㄴ>  imported from './components/.../     */}
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
-        { route === 'home' // {if condition} ? (execute) : (if not, do this) 
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}
+          toggleModal={this.toggleModal} />
+        {/* isProfileOpen ? <Modal>..</Modal> : null */}
+        { isProfileOpen &&
+          <Modal>
+            <Profile 
+              isProfileOpen={isProfileOpen} 
+              toggleModal={this.toggleModal}
+              loadUser={this.loadUser}
+              user={user}  
+            />
+          </Modal>
+        }
+        { route === 'home'
           ? <div> 
               <Logo /> 
+              
               <Rank name={this.state.user.name} entries={this.state.user.entries}/> 
               <ImageLinkForm 
                 onInputChange={this.onInputChange} 

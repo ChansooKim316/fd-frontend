@@ -1,0 +1,5 @@
+#modal-root {
+    position: relative;
+    /* at the very front of all elements */
+    z-index: 999; 
+}
