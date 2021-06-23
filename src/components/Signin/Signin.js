@@ -24,6 +24,11 @@ class Signin extends React.Component {
 		this.enterKeyListener()  //// 9.10 modified
 	}
 
+	saveAuthTokenInSession = (token) => {
+		window.sessionStorage.setItem('token', token);
+		// window.localStorage.setItem('token', token);
+	}
+
 	onSubmitSignIn = () => {
 		// Loading message
 		this.openPopupbox()
@@ -35,58 +40,65 @@ class Signin extends React.Component {
 				password: this.state.signInPassword
 			})
 		}) 
-			.then(response => {
-				// console.log('status :\n', response.status) // log-in succes : 200 , fail : 400
-				if(response.status === 400 && !this.state.alertExecuted) {
-					alert("The username or password is incorrect.");
-					this.setState({alertExecuted: true})
-				} else {
-					return response.json()
+			.then(response => response.json())
+			.then(data => {
+				if (data.userId && data.success === 'true') {
+					this.saveAuthTokenInSession(data.token);
+					fetch(`http://localhost:80/profile/${data.userId}`, {
+						method: 'get',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': data.token
+						}
+						})
+						.then(resp => resp.json())
+						.then(user => {
+							if (user && user.email) {
+								this.props.loadUser(user);
+								this.props.onRouteChange('home');
+							}
+						})
+          .catch(console.log)
 				}
 			})
-			.then(user => {
-				if (user.id) { // checking a user has an 'id'
-					this.props.loadUser(user);
-					this.props.onRouteChange('home');
-				}
-			})
+			.catch(err => console.log(err))
 	}
 
 	//// 9.10 modified : Key listener for enter-key press
-  enterKeyListener = () => {
-    // listening email input
-    document.getElementById('email-address').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        document.getElementById("signin-btn").click();
-        }
-    });
-    // listening password input
-    document.getElementById('password').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        document.getElementById("signin-btn").click();
-        }
-    });
-  }
+	enterKeyListener = () => {
+		// listening email input
+		document.getElementById('email-address').addEventListener('keypress', function (e) {
+		if (e.key === 'Enter') {
+			document.getElementById("signin-btn").click();
+			}
+		});
+		// listening password input
+		document.getElementById('password').addEventListener('keypress', function (e) {
+		if (e.key === 'Enter') {
+			document.getElementById("signin-btn").click();
+			}
+		});
+	}
 
-  openPopupbox() {
-	const content = (
-					<div>
-					  <h3>Loading...</h3>
-					  <p>(The first login may take 20 seconds)</p>
-					</div>
-					)
-	PopupboxManager.open({
-	  content,
-	  config: {
-		titleBar: {
-		  enable: false,
-		  text: ''
-		},
-		fadeIn: true,
-		fadeInSpeed: 200
-	  }
-	})
-  }
+	openPopupbox() {
+		const content = (
+						<div>
+						<h3>Loading...</h3>
+						<p>(The first login may take 20 seconds)</p>
+						</div>
+						)
+		PopupboxManager.open({
+		content,
+		config: {
+			titleBar: {
+			enable: false,
+			text: ''
+			},
+			fadeIn: true,
+			fadeInSpeed: 200
+		}
+		})
+	}
 
 	render() {
 		const { onRouteChange } = this.props;

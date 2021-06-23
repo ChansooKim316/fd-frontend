@@ -92,6 +92,38 @@ class App extends React.Component{
     this.state = initialState;
   }
  
+  // Check if there's a token (It runs when the user refreshes)
+  componentDidMount() {
+    const token = window.sessionStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:80/signin', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+        // recieve 'id' from the back-end (getAuthTokenId())
+        .then(resp => resp.json())
+        .then(data => {
+          if (data && data.id) {
+            fetch(`http://localhost:80/profile/${data.id}`, {
+              method: 'get',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+              }
+            })
+              .then(resp => resp.json())
+              .then(user => {
+                this.loadUser(user)
+                this.onRouteChange('home')
+              })
+          }
+        })
+        .catch(console.log)
+    }
+  }
 
   // get data from 'Sign In' form
   loadUser = (data) => {
@@ -105,25 +137,30 @@ class App extends React.Component{
   }
 
   calculateFaceLocation = (data) => {
-    // recieves input from Clarifai
-    const image = document.getElementById('inputimage');
-    // grabbing 'inputimage' from FaceRecognition.js <img id='inputimage'  .../> 
-    const width = Number(image.width);
-    const height = Number(image.height); // to make sure width,height are number(not string)
-    // console.log(width, height);
-    return data.outputs[0].data.regions.map(face => {
-      const clarifaiFace = face.region_info.bounding_box;
-      return {
-        leftCol: clarifaiFace.left_col * width,
-        topRow: clarifaiFace.top_row * height,
-        rightCol: width - (clarifaiFace.right_col * width),
-        bottomRow: height - (clarifaiFace.bottom_row * height)
-      }
-    });
+    if (data && data.outputs) {
+      // recieves input from Clarifai
+      const image = document.getElementById('inputimage');
+      // grabbing 'inputimage' from FaceRecognition.js <img id='inputimage'  .../> 
+      const width = Number(image.width);
+      const height = Number(image.height); // to make sure width,height are number(not string)
+      // console.log(width, height);
+      return data.outputs[0].data.regions.map(face => {
+        const clarifaiFace = face.region_info.bounding_box;
+        return {
+          leftCol: clarifaiFace.left_col * width,
+          topRow: clarifaiFace.top_row * height,
+          rightCol: width - (clarifaiFace.right_col * width),
+          bottomRow: height - (clarifaiFace.bottom_row * height)
+        }
+      });
+    }
+    return
   }
 
   displayFaceBox = (boxes) => {
-    this.setState({boxes: boxes});
+    if (boxes) {
+      this.setState({boxes: boxes});
+    }
   }
 
 
@@ -137,7 +174,10 @@ class App extends React.Component{
     this.setState({imageUrl: this.state.input}); // it passes 'imageUrl' to <FaceRecognition /> tag
       fetch('http://localhost:80/imageurl', {
         method: 'post', // default is 'get' request.
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': window.sessionStorage.getItem('token')
+        },
         body: JSON.stringify({
           input: this.state.input
         })
@@ -147,7 +187,10 @@ class App extends React.Component{
         if (response) {
           fetch('http://localhost:80/image', {
             method: 'put', // default is 'get' request.
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: this.state.user.id 
             })

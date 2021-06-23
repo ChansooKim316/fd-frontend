@@ -31,11 +31,17 @@ class Profile extends React.Component {
   onProfileUpdate = (data) => {
     fetch(`http://localhost:80/profile/${this.props.user.id}`, {
       method: 'post',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': window.sessionStorage.getItem('token')
+      },
       body: JSON.stringify({ formInput: data })
     }).then(resp => {
-      this.props.toggleModal();
-      this.props.loadUser({ ...this.props.user, ...data });
+      // 304 : when the browser cached the response, and returning it.
+      if (resp.status === 200 || resp.status === 304) {
+        this.props.toggleModal();
+        this.props.loadUser({ ...this.props.user, ...data });
+      }
     }).catch(console.log)
   }
 
