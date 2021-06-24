@@ -30,10 +30,14 @@ class Register extends React.Component {
 		this.enterKeyListener()  //// 9.10 modified
 	}
 
+	saveAuthTokenInSession = (token) => {
+		window.sessionStorage.setItem('token', token);
+		// window.localStorage.setItem('token', token);
+	}
+
 	onSubmitSignIn = () => {
-		
 		fetch('http://localhost:80/register', {
-			method: 'post', // default is 'get' request.
+			method: 'post', // default is 'get'
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
 				email: this.state.email,
@@ -42,9 +46,10 @@ class Register extends React.Component {
 			})
 		}) 
 			.then(response => response.json())
-			.then(user => {
-				if (user.id) {
-					this.props.loadUser(user)
+			.then(data => {
+				if (data.user.id && data.session.success === 'true') {
+					this.saveAuthTokenInSession(data.session.token);
+					this.props.loadUser(data.user)
 					this.props.onRouteChange('home');
 				}
 			})

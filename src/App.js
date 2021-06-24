@@ -132,7 +132,9 @@ class App extends React.Component{
       name: data.name,
       email: data.email,
       entries: data.entries,
-      joined: data.joined
+      joined: data.joined,
+      pet: data.pet,
+      age: data.age
     }})
   }
 
