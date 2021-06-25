@@ -22,6 +22,10 @@ class ProfileIcon extends React.Component {
         }));
     }
 
+    revokeSession = (user) => {
+        sessionStorage.removeItem(user);
+    }
+
     render() {
         return (
             <div className="pa4 tc">

@@ -210,6 +210,7 @@ class App extends React.Component{
   // 'onRouteChange' changes states(line51) : isSignedIn, route
   onRouteChange = (route) => {
     if (route === 'signout') {
+      this.revokeSession()
       return this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})      
@@ -225,6 +226,10 @@ class App extends React.Component{
     }))
   }
 
+  revokeSession = () => {
+    window.sessionStorage.removeItem('token');
+  }
+
   enterKeyListener = () => {
     // listening enter key on url input
     document.getElementById('imageInput').addEventListener('keypress', function (e) {
@@ -233,7 +238,6 @@ class App extends React.Component{
         }
     });
   }  
-
 
   render() {
     const { isSignedIn, imageUrl, route, boxes, isProfileOpen, user } = this.state; // destructuring. write this line, and delete 'this.state'
