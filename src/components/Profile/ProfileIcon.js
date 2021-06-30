@@ -22,8 +22,8 @@ class ProfileIcon extends React.Component {
         }));
     }
 
-    revokeSession = (user) => {
-        sessionStorage.removeItem(user);
+    revokeSession = () => {
+        window.sessionStorage.removeItem('token');
     }
 
     render() {
@@ -45,7 +45,11 @@ class ProfileIcon extends React.Component {
                         className='b-- transparent shadow-5' 
                         style={{marginTop: '20px', backgrounColor: 'rgba(255, 255, 255, 0.5'}}>
                         <DropdownItem onClick={this.props.toggleModal} >View Profile</DropdownItem>
-                        <DropdownItem onClick={ () => this.props.onRouteChange('signout')}>Sign Out</DropdownItem>
+                        <DropdownItem onClick={ () => {
+                            this.revokeSession()
+                            this.props.onRouteChange('signout')}}>
+                            Sign Out
+                        </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
                 

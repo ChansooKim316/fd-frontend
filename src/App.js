@@ -210,7 +210,6 @@ class App extends React.Component{
   // 'onRouteChange' changes states(line51) : isSignedIn, route
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.revokeSession()
       return this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})      
@@ -224,10 +223,6 @@ class App extends React.Component{
       ...prevState,
       isProfileOpen: !prevState.isProfileOpen
     }))
-  }
-
-  revokeSession = () => {
-    window.sessionStorage.removeItem('token');
   }
 
   enterKeyListener = () => {
