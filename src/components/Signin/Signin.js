@@ -71,7 +71,6 @@ class Signin extends React.Component {
 	const content = (
 					<div>
 					  <h3>Loading...</h3>
-					  <p>(The first login may take 20 seconds)</p>
 					</div>
 					)
 	PopupboxManager.open({
