@@ -85,7 +85,6 @@ class Register extends React.Component {
       const content = (
                       <div>
                         <h3>Loading...</h3>
-                        <p>(The first register may take 20 seconds)</p>
                       </div>
                       )
       PopupboxManager.open({
