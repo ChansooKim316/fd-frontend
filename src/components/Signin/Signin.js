@@ -80,24 +80,24 @@ class Signin extends React.Component {
 		});
 	}
 
-  openPopupbox() {
-	const content = (
-					<div>
-						<h3>Loading...</h3>
-					</div>
-					)
-	PopupboxManager.open({
-	  content,
-	  config: {
-		titleBar: {
-		  enable: false,
-		  text: ''
-		},
-		fadeIn: true,
-		fadeInSpeed: 200
-	  }
-	})
-  }
+	openPopupbox() {
+		const content = (
+						<div>
+							<h3>Loading...</h3>
+						</div>
+						)
+		PopupboxManager.open({
+		content,
+		config: {
+			titleBar: {
+			enable: false,
+			text: ''
+			},
+			fadeIn: true,
+			fadeInSpeed: 200
+		}
+		})
+	}
 
 	render() {
 		const { onRouteChange } = this.props;
