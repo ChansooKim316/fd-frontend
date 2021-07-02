@@ -96,7 +96,7 @@ class App extends React.Component{
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:80/signin', {
+      fetch('http://52.79.197.112:80/signin', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ class App extends React.Component{
         .then(resp => resp.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`http://localhost:80/profile/${data.id}`, {
+            fetch(`http://52.79.197.112:80/profile/${data.id}`, {
               method: 'get',
               headers: {
                 'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ class App extends React.Component{
   onButtonSubmit = () => {
     // need to do < npm install clarifai > first
     this.setState({imageUrl: this.state.input}); // it passes 'imageUrl' to <FaceRecognition /> tag
-      fetch('http://localhost:80/imageurl', {
+      fetch('http://52.79.197.112:80/imageurl', {
         method: 'post', // default is 'get' request.
         headers: {
           'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ class App extends React.Component{
       .then(response => response.json()) // because this is a fetch, we have to do response.json()
       .then(response => {
         if (response) {
-          fetch('http://localhost:80/image', {
+          fetch('http://52.79.197.112:80/image', {
             method: 'put', // default is 'get' request.
             headers: {
               'Content-Type': 'application/json',
